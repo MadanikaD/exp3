@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Form Validation</title>
+<style>
+    body {
+        text-align: center;
+        background-image: url('./background.png'); 
+        background-size: cover;
+        background-position: center;
+    }
+
+    form, #result {
+        margin: 0 auto;
+        max-width: 600px;
+        background-color: #1682c0cc; 
+        padding: 20px;
+        border-radius: 10px;
+    }
+
+    .error {
+        color: red;
+    }
+</style>
+</head>
+<body>
+
+<h2>Form Validation</h2>
+
+<form id="myForm" onsubmit="return validateForm()">
+    <label for="name">Name:</label><br>
+    <input type="text" id="name" name="name"><br>
+    <span id="nameError" class="error"></span><br>
+    
+    <label for="email">Email:</label><br>
+    <input type="email" id="email" name="email"><br>
+    <span id="emailError" class="error"></span><br>
+    
+    <label for="gender">Gender:</label><br>
+    <input type="radio" id="male" name="gender" value="male">
+    <label for="male">Male</label>
+    <input type="radio" id="female" name="gender" value="female">
+    <label for="female">Female</label><br>
+    <span id="genderError" class="error"></span><br>
+    
+    <label for="password">Password:</label><br>
+    <input type="password" id="password" name="password"><br>
+    <span id="passwordError" class="error"></span><br>
+
+    <label for="confirmPassword">Confirm Password:</label><br>
+    <input type="password" id="confirmPassword" name="confirmPassword"><br>
+    <span id="confirmPasswordError" class="error"></span><br>
+    
+    <label for="phoneNumber">Phone Number:</label><br>
+    <input type="text" id="phoneNumber" name="phoneNumber"><br>
+    <span id="phoneNumberError" class="error"></span><br>
+    
+    <label for="department">Department:</label><br>
+    <select id="department" name="department">
+        <option value="it">Information Technology</option>
+        <option value="cse">Computer Science and Engineering</option>
+        <option value="mech">Mechanical Engineering</option>
+        <option value="civil">Civil Engineering</option>
+        <option value="chemical">Chemical Engineering</option>
+        <option value="foodtech">Food Technology</option>
+    </select><br><br>
+    
+    <input type="submit" value="Submit">
+</form>
+
+<div id="result"></div>
+
+<script>
+function validateForm() {
+    var name = document.getElementById("name").value;
+    var email = document.getElementById("email").value;
+    var gender = document.querySelector('input[name="gender"]:checked');
+    var password = document.getElementById("password").value;
+    var confirmPassword = document.getElementById("confirmPassword").value;
+    var phoneNumber = document.getElementById("phoneNumber").value;
+    var department = document.getElementById("department").value;
+    var isValid = true;
+    
+    document.getElementById("nameError").innerHTML = "";
+    document.getElementById("emailError").innerHTML = "";
+    document.getElementById("genderError").innerHTML = "";
+    document.getElementById("passwordError").innerHTML = "";
+    document.getElementById("confirmPasswordError").innerHTML = "";
+    document.getElementById("phoneNumberError").innerHTML = "";
+
+    if (name == "") {
+        document.getElementById("nameError").innerHTML = "Name is required";
+        isValid = false;
+    }
+
+    if (email == "") {
+        document.getElementById("emailError").innerHTML = "Email is required";
+        isValid = false;
+    } else if (!/\S+@\S+\.\S+/.test(email)) {
+        document.getElementById("emailError").innerHTML = "Invalid email format";
+        isValid = false;
+    }
+
+    if (!gender) {
+        document.getElementById("genderError").innerHTML = "Gender is required";
+        isValid = false;
+    }
+
+    if (password == "") {
+        document.getElementById("passwordError").innerHTML = "Password is required";
+        isValid = false;
+    } else if (password.length < 8) {
+        document.getElementById("passwordError").innerHTML = "Password must be at least 8 characters long";
+        isValid = false;
+    }
+
+    if (confirmPassword == "") {
+        document.getElementById("confirmPasswordError").innerHTML = "Please confirm password";
+        isValid = false;
+    } else if (confirmPassword !== password) {
+        document.getElementById("confirmPasswordError").innerHTML = "Passwords do not match";
+        isValid = false;
+    }
+
+    if (phoneNumber == "") {
+        document.getElementById("phoneNumberError").innerHTML = "Phone Number is required";
+        isValid = false;
+    } else if (phoneNumber.length !== 10) {
+        document.getElementById("phoneNumberError").innerHTML = "Phone Number must be 10 digits long";
+        isValid = false;
+    }
+
+    if (isValid) {
+        var formData = {
+            Name: name,
+            Email: email,
+            Gender: gender.value,
+            Department: department,
+            PhoneNumber: phoneNumber
+        };
+
+        var resultMessage = "Registration successful! Details: <br>";
+        for (var key in formData) {
+            resultMessage += key + ": " + formData[key] + "<br>";
+        }
+
+        // Open a new tab to display registration details
+        var newTab = window.open();
+        newTab.document.body.innerHTML = '<div style="text-align:center;"><div style="max-width:600px; background-color:rgba(255,255,255,0.8); padding:20px; border-radius:10px; margin:0 auto;">' + resultMessage + '</div></div>';
+
+        // Print registration confirmation message
+        window.print();
+    } else {
+        document.getElementById("result").innerHTML = "";
+    }
+
+    return isValid;
+}
+</script>
+
+</body>
+</html>
